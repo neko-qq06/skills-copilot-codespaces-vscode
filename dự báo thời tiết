@@ -1,0 +1,36 @@
+def weather() :
+    speak("Bạn muốn xem thời tiết ở đâu ạ!") # type: ignore
+    time.sleep(3)
+    url = "http://api.openweathermap.org/data/2.5/weather?"
+    city = get_test()
+    if not city:
+        pass
+    api_key = "fe8d8c65cf345889139d8e545f57819a"
+    call_url = url + "appid=" + api_key + "&q=" + city + "&units=metric"
+    response = requests.get(call_url)
+    data = response.json()
+    if data["cod"] != "404":
+        city_res = data["main"]
+        current_temp = city_res["temp"]
+        current_pressure = city_res["pressure"]
+        current_humidity = city_res["humidity"]
+        sun_time = data["sys"]
+        sun_rise = datetime.datetime.fromtimestamp(sun_time["sunrise"])
+        sun_set = datetime.datetime.fromtimestamp(sun_time["sunset"])
+        wther = data["weather"]
+        weather_des wther[0] ["description"]
+        now = datetime.datetime.now()
+        content = """
+        Hôm nay là ngày {day} tháng {month} năm {year}
+        Mặt trời mọc vào {hourrise} giờ {minrise} phút
+        Mặt trời mọc lặn {hoursetset} giờ {minset} phút
+        Nhiệt độ trung bình là {temp} độ C
+        áp suất khong khí là (pressure) héc tơ Pascal
+        Độ ẩm là (humidity)%
+        Trời hôm nay quang mây. Dự báo mưa rải rác ở một số nơi.""".format(day = now.day, moth = now.month, year = now.year, hourrise = sun_rise.hour, minrise = sun_rise.minute, 
+                                                                            hourset = sun_set.hour, minset = sun_set.minute,
+                                                                            temp = current_temp, pressure = current_pressure, humidity = current_humidity)
+        speak(content)
+        time.sleep(25)
+    else:
+        speak("không thể tìm thấy thành phố!")  
